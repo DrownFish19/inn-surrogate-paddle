@@ -24,15 +24,15 @@ class conditioning_network(nn.Layer):
 
             def forward(self, x):
                 if x[:, 0, 0, 0].shape == [1, ]:
-                    out = x.reshape([1, 4, 4, 8, 8])  # for config_1  change this to out = x.reshape([1,2,4,8,8])
+                    out = x.reshape([1, 2, 4, 8, 8])  # for config_1  change this to out = x.reshape([1,2,4,8,8])
                 if x[:, 0, 0, 0].shape == [16, ]:
-                    out = x.reshape([16, 4, 4, 8, 8])  # for config_1  change this to out = x.reshape([16,2,4,8,8])
+                    out = x.reshape([16, 2, 4, 8, 8])  # for config_1  change this to out = x.reshape([16,2,4,8,8])
                 elif x[:, 0, 0, 0].shape == [1000, ]:
-                    out = x.reshape([1000, 4, 4, 8, 8])  # for config_1  change this to out = x.reshape([1000,2,4,8,8])
+                    out = x.reshape([1000, 2, 4, 8, 8])  # for config_1  change this to out = x.reshape([1000,2,4,8,8])
                 return out
 
         # for config_1  change this to nn.Conv3DTranspose(2,  48, (1,2,2), padding=0)
-        self.multiscale = nn.LayerList([nn.Sequential(unflat_data(), nn.Conv3DTranspose(4, 48, (1, 2, 2), padding=0), nn.ReLU(),
+        self.multiscale = nn.LayerList([nn.Sequential(unflat_data(), nn.Conv3DTranspose(2, 48, (1, 2, 2), padding=0), nn.ReLU(),
                                                       nn.Conv3DTranspose(48, 48, (1, 2, 2), padding=(0, 1, 1), stride=(1, 2, 2))),
             nn.Sequential(nn.ReLU(), nn.Conv3DTranspose(48, 64, (1, 2, 2), padding=0, stride=(1, 1, 1)), nn.ReLU(),
                           nn.Conv3DTranspose(64, 64, (1, 2, 2), padding=(0, 1, 1), stride=(1, 2, 2))),

@@ -63,7 +63,7 @@ def train(N_epochs):
     loss_val = []
     for batch_idx, (x, y) in enumerate(train_loader):
         x = x.reshape([16, 1, 4, 64, 64])
-        y = y.reshape([16, 4, 4, 64])  # for config_1  change this to y = y.reshape([16,2,4,64])
+        y = y.reshape([16, 2, 4, 64])  # for config_1  change this to y = y.reshape([16,2,4,64])
         y1 = cond_network(y)
         input = x
         c = y1[2]
@@ -88,11 +88,11 @@ def test(epoch):
     for batch_idx, (input, target) in enumerate(test_loader):
         x, y = input, target
         x = x.reshape([16, 1, 4, 64, 64])
-        y = y.reshape([16, 4, 4, 64])  # for config_1  change this to y = y.reshape([16,2,4,64])
-        input, target = x.reshape([16, 1, 4, 64, 64]), y.reshape([16, 4, 4, 64])  # for config_1  change this to target = y.reshape([16,2,
+        y = y.reshape([16, 2, 4, 64])  # for config_1  change this to y = y.reshape([16,2,4,64])
+        input, target = x.reshape([16, 1, 4, 64, 64]), y.reshape([16, 2, 4, 64])  # for config_1  change this to target = y.reshape([16,2,
         # 4,64])
         x = input.reshape([16, 1, 4, 64, 64])
-        y = target.reshape([16, 4, 4, 64])  # for config_1  change this to y = target.reshape([16,2,4,64])
+        y = target.reshape([16, 2, 4, 64])  # for config_1  change this to y = target.reshape([16,2,4,64])
         tic = time()
         y1 = cond_network(y)
         c = y1[2]
@@ -114,11 +114,11 @@ def sample2(epoch):
     for batch_idx, (input, target) in enumerate(sample_loader):
         x, y = input, target
         x = x.reshape([1, 1, 4, 64, 64])
-        y = y.reshape([1, 4, 4, 64])  # for config_1  change this to y = y.reshape([1,2,4,64])
-        input, target = x.reshape([1, 1, 4, 64, 64]), y.reshape([1, 4, 4, 64])  # for config_1  change this to target = y.reshape([1,2,4,
+        y = y.reshape([1, 2, 4, 64])  # for config_1  change this to y = y.reshape([1,2,4,64])
+        input, target = x.reshape([1, 1, 4, 64, 64]), y.reshape([1, 2, 4, 64])  # for config_1  change this to target = y.reshape([1,2,4,
         # 64])
         x = input.reshape([1, 1, 4, 64, 64])
-        y = target.reshape([1, 4, 4, 64])  # for config_1  change this to y = target.reshape([16,2,4,64])
+        y = target.reshape([1, 2, 4, 64])  # for config_1  change this to y = target.reshape([16,2,4,64])
         labels_test = target
         N_samples = 1000
         labels_test = labels_test[0, :, :, :]
@@ -213,7 +213,7 @@ def test_NLL():
     for batch_idx, (input, target) in enumerate(NLL_test_loader):
         input, target = input.float(), target.float()
         x, y = input.to(device), target.to(device)
-        input, target = x.reshape([128, 1, 4, 64, 64]), y.reshape([128, 4, 4, 64])  # for config_1  change this to target = y.reshape([16,2,
+        input, target = x.reshape([128, 1, 4, 64, 64]), y.reshape([128, 2, 4, 64])  # for config_1  change this to target = y.reshape([16,2,
         # 4,64])
         labels_test1 = target
         N_samples = 1000

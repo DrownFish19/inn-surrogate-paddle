@@ -72,7 +72,7 @@ def train(N_epochs):
     loss_mean = []
     for i, (x, y) in enumerate(train_loader):
         x = x.reshape([16, 1, 64, 64])
-        y = y.reshape([16, 4, 64])  # for config_1  change this to y = y.reshape([16,2,64])
+        y = y.reshape([16, 2, 64])  # for config_1  change this to y = y.reshape([16,2,64])
         tic = time()
         y1 = cond_network(y)
         c = y1[2]
@@ -95,10 +95,10 @@ def test(epoch):
     loss_mean = []
     for batch_idx, (input, target) in enumerate(test_loader):
         # input, target = input.to(device), target.to(device)
-        input, target = input.reshape([16, 1, 64, 64]), target.reshape([16, 4, 64])
+        input, target = input.reshape([16, 1, 64, 64]), target.reshape([16, 2, 64])
         # for config_1  change this to target = target.reshape([16,2,64])
         x = input.reshape([16, 1, 64, 64])
-        y = target.reshape([16, 4, 64])  # for config_1  change this to y = target.reshape([16,2,64])
+        y = target.reshape([16, 2, 64])  # for config_1  change this to y = target.reshape([16,2,64])
         tic = time()
         y1 = cond_network(y)
         c = y1[2]
@@ -117,10 +117,10 @@ def sample2(epoch):
     cond_network.eval()
     loss_mean = []
     for batch_idx, (input, target) in enumerate(sample_loader):
-        input, target = input.reshape([1, 1, 64, 64]), target.reshape([1, 4, 64])
+        input, target = input.reshape([1, 1, 64, 64]), target.reshape([1, 2, 64])
         # for config_1  change this to target = target.reshape([16,2,64])
         x = input.reshape([1, 1, 64, 64])
-        y = target.reshape([1, 4, 64])  # for config_1  change this to y = target.reshape([16,2,64])
+        y = target.reshape([1, 2, 64])  # for config_1  change this to y = target.reshape([16,2,64])
         labels_test = target
         N_samples = 1000
 
@@ -172,7 +172,7 @@ def test_NLL(epoch):
     cond_network.eval()
     final_concat = []
     for batch_idx, (input, target) in enumerate(test_loader_nll):
-        input12, target = input.reshape([128, 1, 64, 64]), target.reshape([128, 4, 64])
+        input12, target = input.reshape([128, 1, 64, 64]), target.reshape([128, 2, 64])
         # for config_1  change this to target = target.reshape([128,2,64])
         N_samples = 1000
         labels_test1 = target

@@ -22,9 +22,9 @@ class Downsample(nn.Layer):
             data = x.transpose([0, 2, 3, 4, 1])
             data_mod = data.reshape([batch_size, depth_1, height_1, width_1, 4, int(channel_2)])
             stack = [data_s.reshape([batch_size, depth_1, height_1, int(width_2), int(channel_2)]) for data_s in data_mod.split(2, 4)]
-            data = paddle.stack(stack, 0).transpose(0, 1)
+            data = paddle.stack(stack, 0).transpose([1, 0, 2, 3, 4, 5])
             data = data.transpose([0, 2, 3, 1, 4, 5])
-            output = data.reshape([batch_size, int(depth_2), int(height_2), int(width_2), int(channel_2)]).permute(0, 4, 1, 2, 3)
+            output = data.reshape([batch_size, int(depth_2), int(height_2), int(width_2), int(channel_2)]).transpose([0, 4, 1, 2, 3])
             return output
         else:
             (batch_size, channel_2, depth_2, height_2, width_2) = x.shape

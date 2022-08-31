@@ -16,7 +16,7 @@ from utils.plot_samples import save_samples
 
 # load the data here
 train_loader, test_loader, sample_loader, test_loader_nll = load_data()
-print('loaded the data.........')
+print('loaded the data.........', flush=True)
 
 
 # this is the s and the t network
@@ -124,7 +124,7 @@ def sample2(epoch):
         labels_test = target
         N_samples = 1000
 
-        print(type(labels_test))
+        print(type(labels_test), flush=True)
         labels_test = labels_test[0, :, :]
         labels_test = labels_test.cpu().numpy()
         l = np.repeat(np.array(labels_test)[np.newaxis, :, :], N_samples, axis=0)
@@ -216,14 +216,14 @@ def mkdir(path):
 # ==========================================================
 
 
-print('training start .............')
+print('training start .............', flush=True)
 mkdir('results')
 N_epochs = 102
 loss_train_all = []
 loss_test_all = []
 tic = time()
 for epoch in range(args.epochs):
-    print('epoch number .......', epoch)
+    print('epoch number .......', epoch, flush=True)
     loss_train = train(epoch)
     loss_train2 = np.mean(loss_train)
     loss_train_all.append(loss_train2)
@@ -231,21 +231,21 @@ for epoch in range(args.epochs):
         sample2(epoch)
         loss_test = test(epoch)
         loss_test = np.mean(loss_test)
-        print(('mean NLL :', loss_test))
+        print(('mean NLL :', loss_test), flush=True)
         loss_test_all.append(loss_test)
     if epoch == (N_epochs - 1):
         final_error = test_NLL(epoch)
         old_val = np.mean(final_error)
-        print('print error mean NLL:', np.mean(final_error))
+        print('print error mean NLL:', np.mean(final_error), flush=True)
 
 epoch1 = 200
 paddle.save(INN_network.state_dict(), f'INN_network_epoch{epoch1}.pt')
 paddle.save(cond_network.state_dict(), f'cond_network_epoch{epoch1}.pt')
 loss_train_all = np.array(loss_train_all)
 loss_test_all = np.array(loss_test_all)
-print('saving the training error and testing error')
+print('saving the training error and testing error', flush=True)
 io.savemat('test_loss.mat', dict([('testing_loss', np.array(loss_test_all))]))
-print('plotting the training error and testing error')
+print('plotting the training error and testing error', flush=True)
 train_test_error(loss_train_all, loss_test_all, epoch1)
 toc = time()
-print('total traning taken:', toc - tic)
+print('total traning taken:', toc - tic, flush=True)

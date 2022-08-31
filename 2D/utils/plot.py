@@ -23,19 +23,19 @@ def error_bar(actual, pred, epoch):
     pred = pred
 
     pred_mean = np.mean(pred, axis=0)
-    print('pred_mean', pred_mean.shape)
-    print(actual.shape)
-    print(pred.shape)
+    print('pred_mean', pred_mean.shape,flush=True)
+    print(actual.shape,flush=True)
+    print(pred.shape,flush=True)
 
     pred_mean = pred_mean.reshape(64, 64)
     pred_diag = np.diag(pred_mean)
 
     actdiag = np.diag(actual)
-    print(actdiag.shape)
+    print(actdiag.shape,flush=True)
 
     pred_std = np.std(pred, axis=0)
     pred_std = pred_std.reshape(64, 64)
-    print('std', pred_std.shape)
+    print('std', pred_std.shape,flush=True)
     std_diag = np.diag(pred_std)
 
     std_val = np.std(actdiag)

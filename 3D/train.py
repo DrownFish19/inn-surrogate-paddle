@@ -16,7 +16,7 @@ from utils.load_data import load_data
 
 # load the data here
 train_loader, test_loader, sample_loader, NLL_test_loader = load_data()
-print('loaded the data.........')
+print('loaded the data.........', flush=True)
 
 
 # this is the s and the t network
@@ -171,13 +171,13 @@ def mkdir(path):
 # ==========================================================
 
 
-print('training start .............')
+print('training start .............', flush=True)
 mkdir('results')
 loss_train_all = []
 loss_test_all = []
 tic = time()
 for epoch in range(1, args.epochs):
-    print('epoch number .......', epoch)
+    print('epoch number .......', epoch, flush=True)
     loss_train = train(epoch)
     loss_train2 = np.mean(loss_train)
     loss_train_all.append(loss_train2)
@@ -185,7 +185,7 @@ for epoch in range(1, args.epochs):
         sample2(epoch)
         loss_test = test(epoch)
         loss_test = np.mean(loss_test)
-        print(('NLL loss:', loss_test))
+        print(('NLL loss:', loss_test), flush=True)
         loss_test_all.append(loss_test)
 
 epoch1 = 200
@@ -193,13 +193,13 @@ paddle.save(INN_network.state_dict(), f'INN_network_epoch{epoch1}.pt')
 paddle.save(cond_network.state_dict(), f'cond_network_epoch{epoch1}.pt')
 loss_train_all = np.array(loss_train_all)
 loss_test_all = np.array(loss_test_all)
-print('saving the training error and testing error')
+print('saving the training error and testing error', flush=True)
 io.savemat('training_loss.mat', dict([('training_loss', np.array(loss_train_all))]))
 io.savemat('test_loss.mat', dict([('testing_loss', np.array(loss_test_all))]))
-print('plotting the training error and testing error')
+print('plotting the training error and testing error', flush=True)
 train_test_error(loss_train_all, loss_test_all, epoch1)
 toc = time()
-print('total traning taken:', toc - tic)
+print('total traning taken:', toc - tic, flush=True)
 
 domain = 16384
 
@@ -249,4 +249,4 @@ def test_NLL():
 with paddle.no_grad():
     final_error = test_NLL()
     old_val = np.mean(final_error)
-    print('NRMSE:', np.mean(final_error))
+    print('NRMSE:', np.mean(final_error), flush=True)

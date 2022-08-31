@@ -49,11 +49,12 @@ class Parser(argparse.ArgumentParser):
         # seed
         if args.seed is None:
             args.seed = random.randint(1, 10000)
-        print("Random Seed: ", args.seed)
+        print("Random Seed: ", args.seed, flush=True)
         random.seed(args.seed)
         paddle.seed(args.seed)
-        print('Arguments:')
+        print('Arguments:', flush=True)
         pprint(vars(args))
+        print(flush=True)
         return args
 
 

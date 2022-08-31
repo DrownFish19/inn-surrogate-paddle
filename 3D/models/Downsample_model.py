@@ -14,7 +14,7 @@ class Downsample(nn.Layer):
 
     def forward(self, x, sample_the_data=False):
         if sample_the_data == True:
-            (batch_size, channel_1, depth_1, height_1, width_1) = x.size()
+            (batch_size, channel_1, depth_1, height_1, width_1) = x.shape
             channel_2 = channel_1 / 4
             width_2 = width_1 * 2
             height_2 = (height_1) * 2

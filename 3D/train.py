@@ -8,7 +8,7 @@ import paddle.nn as nn
 import paddle.optimizer as optim
 import scipy.io as io
 
-from args import args, device
+from args import args
 from models.conditioning_network import conditioning_network
 from models.main_model import main_file
 from utils.error_bars import error_bar, train_test_error
@@ -244,6 +244,13 @@ def test_NLL():
         final_concat = np.array(final_concat)
     return final_concat
 
+
+# for load model test
+# model1 = f'/root/autodl-nas/3D/model-C2-5pc-10000/INN_network_epoch{epoch1}.pt'
+# model2 = f'/root/autodl-nas/3D/model-C2-5pc-10000/cond_network_epoch{epoch1}.pt'
+# print(model1, model2)
+# INN_network.set_state_dict(paddle.load(model1))
+# cond_network.set_state_dict(paddle.load(model2))
 
 with paddle.no_grad():
     final_error = test_NLL()

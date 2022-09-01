@@ -211,8 +211,7 @@ def test_NLL():
     loss_val = []
     final_concat = []
     for batch_idx, (input, target) in enumerate(NLL_test_loader):
-        input, target = input.float(), target.float()
-        x, y = input.to(device), target.to(device)
+        x, y = input, target
         input, target = x.reshape([128, 1, 4, 64, 64]), y.reshape([128, 2, 4, 64])  # for config_1  change this to target = y.reshape([16,2,
         # 4,64])
         labels_test1 = target
@@ -223,8 +222,8 @@ def test_NLL():
             x = input[jj, :, :, :, :]
             labels_test = labels_test.cpu().numpy()
             l = np.repeat(np.array(labels_test)[np.newaxis, :, :, :], N_samples, axis=0)
-            l = paddle.Tensor(l).to(device)
-            z = paddle.randn([N_samples, 16384]).to(device)
+            l = paddle.Tensor(l)
+            z = paddle.randn([N_samples, 16384])
             with paddle.no_grad():
                 y1 = cond_network(l)
                 c = y1[2]

@@ -169,7 +169,7 @@ inn-surrogate-paddle
 ### 5. Pre-trained models
 
 ### Acknowledgments
-Thanks for authors publish [inn-surrogate](https://github.com/zabaras/inn-surrogate).
+Thanks to authors publish [inn-surrogate](https://github.com/zabaras/inn-surrogate).
 
 If you find this GitHub repository useful for your work, please consider to cite their work:  
 

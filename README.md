@@ -166,7 +166,10 @@ inn-surrogate-paddle
         `-- Config_2_train_obs_5pc_3D.hdf5
 ```
 
-### 5. Pre-trained models
+### 5. Pre-trained models and logs
+[Baidu Pan](https://pan.baidu.com/s/1OzkTBKSUYNpKy4u5E0eBGw?pwd=fixa)
+
+
 
 ### Acknowledgments
 Thanks to authors publish [inn-surrogate](https://github.com/zabaras/inn-surrogate).

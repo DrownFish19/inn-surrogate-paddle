@@ -167,7 +167,7 @@ inn-surrogate-paddle
 ```
 
 ### 5. Pre-trained models and logs
-[Baidu Pan](https://pan.baidu.com/s/1OzkTBKSUYNpKy4u5E0eBGw?pwd=fixa)
+[Baidu Pan](https://pan.baidu.com/s/14fUU1YU-b-zkkQPkdl_JzQ?pwd=82ij)
 
 
 

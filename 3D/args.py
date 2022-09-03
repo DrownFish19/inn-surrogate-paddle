@@ -44,6 +44,10 @@ class Parser(argparse.ArgumentParser):
         self.add_argument('--input_dimension32', type=int, default=1, help='dinvertible block-4')
         self.add_argument('--permute_a3', type=int, default=4096, help='permutation for the invertible block-4')
 
+        self.add_argument('--pc', type=int, default=1, help='[1,3,5]')
+        self.add_argument('--data_size', type=int, default=10000, help='[6000,8000,10000]')
+        self.add_argument('--gpu_id', type=int, default=0)
+
     def parse(self):
         args = self.parse_args()
         # seed
@@ -60,4 +64,4 @@ class Parser(argparse.ArgumentParser):
 
 # global
 args = Parser().parse()
-device = paddle.set_device("gpu" if paddle.is_compiled_with_cuda() else "cpu")
+device = paddle.set_device("gpu:{}".format(args.gpu_id) if paddle.is_compiled_with_cuda() else "cpu")

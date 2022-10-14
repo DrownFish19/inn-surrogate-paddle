@@ -136,9 +136,9 @@ def sample2(epoch):
         rev_x = val.cpu().numpy()
         if epoch == 200:
             input_test = input.cpu().numpy()
-            f2 = h5py.File('data_save_%d.h5' % epoch, 'w')
-            f2.create_dataset('input', data=input_test, compression='gzip', compression_opts=9)
-            f2.create_dataset('pred', data=rev_x, compression='gzip', compression_opts=9)
+            f2 = h5py.File(f'{args.results_path}/data_save_{epoch}.h5', 'w')
+            f2.create_dataset(f'{args.results_path}/input', data=input_test, compression='gzip', compression_opts=9)
+            f2.create_dataset(f'{args.results_path}/pred', data=rev_x, compression='gzip', compression_opts=9)
             f2.close()
         if epoch % 20 == 0:
             input_test = input.cpu().numpy()

@@ -45,4 +45,4 @@ class conditioning_network(nn.Layer):
         value = [cond]
         for value_data in self.multiscale:
             value.append(value_data(value[-1]))
-        return value[1:]
+        return value[1:]  # 此处返回多尺度结果，为图中的c1,c2,c3,c4

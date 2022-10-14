@@ -1,4 +1,3 @@
-import os
 from time import time
 
 import h5py
@@ -56,7 +55,7 @@ combine_parameters += list(cond_network.parameters())
 optimizer = optim.Adam(parameters=combine_parameters, learning_rate=args.lr, weight_decay=args.weight_decay)
 
 
-def train(N_epochs):
+def train():
     INN_network.train()
     cond_network.train()
     loss_mean = []
@@ -80,7 +79,7 @@ def train(N_epochs):
     return loss_mean1
 
 
-def test(epoch):
+def test():
     INN_network.eval()
     cond_network.eval()
     loss_mean = []
@@ -162,49 +161,8 @@ def sample2(epoch):
             error_bar(actual, pred, epoch, 1)
 
 
-# ==========================================================
-def mkdir(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-
-# ==========================================================
-
-
-print('training start .............', flush=True)
-mkdir('results')
-loss_train_all = []
-loss_test_all = []
-tic = time()
-for epoch in range(1, args.epochs):
-    print('epoch number .......', epoch, flush=True)
-    loss_train = train(epoch)
-    loss_train2 = np.mean(loss_train)
-    loss_train_all.append(loss_train2)
-    with paddle.no_grad():
-        sample2(epoch)
-        loss_test = test(epoch)
-        loss_test = np.mean(loss_test)
-        print(('NLL loss:', loss_test), flush=True)
-        loss_test_all.append(loss_test)
-
-epoch1 = 200
-paddle.save(INN_network.state_dict(), f'INN_network_epoch{epoch1}.pt')
-paddle.save(cond_network.state_dict(), f'cond_network_epoch{epoch1}.pt')
-loss_train_all = np.array(loss_train_all)
-loss_test_all = np.array(loss_test_all)
-print('saving the training error and testing error', flush=True)
-io.savemat('training_loss.mat', dict([('training_loss', np.array(loss_train_all))]))
-io.savemat('test_loss.mat', dict([('testing_loss', np.array(loss_test_all))]))
-print('plotting the training error and testing error', flush=True)
-train_test_error(loss_train_all, loss_test_all, epoch1)
-toc = time()
-print('total traning taken:', toc - tic, flush=True)
-
-domain = 16384
-
-
 def test_NLL():
+    domain = 16384
     INN_network.eval()
     cond_network.eval()
     loss_mean = []
@@ -252,7 +210,35 @@ def test_NLL():
 # INN_network.set_state_dict(paddle.load(model1))
 # cond_network.set_state_dict(paddle.load(model2))
 
+print('training start .............', flush=True)
+loss_train_all = []
+loss_test_all = []
+tic = time()
+for epoch in range(1, args.epochs):
+    print('epoch number .......', epoch, flush=True)
+    loss_train = train()
+    loss_train2 = np.mean(loss_train)
+    loss_train_all.append(loss_train2)
+    with paddle.no_grad():
+        sample2(epoch)
+        loss_test = test()
+        loss_test = np.mean(loss_test)
+        print(('NLL loss:', loss_test), flush=True)
+        loss_test_all.append(loss_test)
+
 with paddle.no_grad():
     final_error = test_NLL()
     old_val = np.mean(final_error)
-    print('NRMSE:', np.mean(final_error), flush=True)
+    print('relative l2:', np.mean(final_error), flush=True)
+
+paddle.save(INN_network.state_dict(), f'{args.results_path}/INN_network_epoch{args.epochs}.pt')
+paddle.save(cond_network.state_dict(), f'{args.results_path}/cond_network_epoch{args.epochs}.pt')
+loss_train_all = np.array(loss_train_all)
+loss_test_all = np.array(loss_test_all)
+print('saving the training error and testing error', flush=True)
+io.savemat(f'{args.results_path}/training_loss.mat', dict([('training_loss', np.array(loss_train_all))]))
+io.savemat(f'{args.results_path}/test_loss.mat', dict([('testing_loss', np.array(loss_test_all))]))
+print('plotting the training error and testing error', flush=True)
+train_test_error(loss_train_all, loss_test_all, args.epochs)
+toc = time()
+print('total traning taken:', toc - tic, flush=True)

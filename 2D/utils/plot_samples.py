@@ -9,6 +9,8 @@ import paddle
 from PIL import Image
 from mpl_toolkits.axes_grid1 import ImageGrid
 
+from args import args
+
 plt.switch_backend('agg')
 
 
@@ -127,7 +129,7 @@ def save_samples(save_dir, images, epoch, plot, name, nrow=4, heatmap=True, cmap
             cbar.ax.tick_params(labelsize=10)
             cbar.ax.toggle_label(True)
             plt.subplots_adjust(top=0.95)
-            plt.savefig('./results/{}_c{}_epoch{}.pdf'.format(name, c, epoch),
+            plt.savefig('./{}/{}_c{}_epoch{}.pdf'.format(args.results_path, name, c, epoch),
                         bbox_inches='tight')
             plt.close(fig)
     else:

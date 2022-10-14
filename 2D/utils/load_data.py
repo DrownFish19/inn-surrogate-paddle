@@ -8,7 +8,7 @@ ntrain = args.data_size
 
 
 def load_data():
-    Train_hdf5_file = '../data/2D_problem_dataset/Config_2_train_obs_{}pc.hdf5'.format(args.pc)
+    Train_hdf5_file = '{}/Config_2_train_obs_{}pc.hdf5'.format(args.data_path, args.pc)
     print("train size:", args.data_size)
     print("train file:", Train_hdf5_file, flush=True)
     with h5py.File(Train_hdf5_file, 'r') as f:
@@ -19,7 +19,7 @@ def load_data():
         train_loader = DataLoader(TensorDataset([paddle.to_tensor(x_train, dtype='float32'), paddle.to_tensor(y_train, dtype='float32')]),
                                   batch_size=16, shuffle=True, drop_last=True)
 
-    Test_hdf5_file = '../data/2D_problem_dataset/Config_2_test_obs_{}pc.hdf5'.format(args.pc)
+    Test_hdf5_file = '{}/Config_2_test_obs_{}pc.hdf5'.format(args.data_path,args.pc)
     print("test file:", Test_hdf5_file, flush=True)
     with h5py.File(Test_hdf5_file, 'r') as f1:
         x_test = f1['input'][:, :]
@@ -32,7 +32,7 @@ def load_data():
             TensorDataset([paddle.to_tensor(x_test, dtype='float32'), paddle.to_tensor(y_test_new, dtype='float32')]), batch_size=128,
             shuffle=False, drop_last=True)
 
-    Sample_hdf5_file = '../data/2D_problem_dataset/Config_2_sample_obs_{}pc.hdf5'.format(args.pc)
+    Sample_hdf5_file = '{}/Config_2_sample_obs_{}pc.hdf5'.format(args.data_path,args.pc)
     print("sample file:", Sample_hdf5_file, flush=True)
     with h5py.File(Sample_hdf5_file, 'r') as f2:
         x_test = f2['input'][:, :]

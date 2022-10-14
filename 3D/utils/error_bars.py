@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from args import args
+
 plt.switch_backend('agg')
 
 
@@ -31,7 +33,7 @@ def error_bar(actual, pred, epoch, layer):
     x = np.linspace(0, 64, 64)
     errorfill(x, pred_diag, 2 * std_diag, 'b')
     plt.plot(x, actdiag, 'g')
-    plt.savefig('./results/diag_error_{}_layer{}.pdf'.format(epoch, layer), bbox_inches='tight')
+    plt.savefig('./{}/diag_error_{}_layer{}.pdf'.format(args.results_path, epoch, layer), bbox_inches='tight')
     plt.close()
 
 
@@ -41,14 +43,14 @@ def train_test_error(nll_train, nll_test, epoch):
     plt.xlabel('Epoch')
     plt.ylabel(r'NLL')
     plt.legend(loc='lower right')
-    plt.savefig("Test_nll.pdf", dpi=600)
+    plt.savefig(f"{args.results_path}/Test_nll.pdf", dpi=600)
     plt.close()
-    np.savetxt("./results/Test_nll.txt", nll_test)
+    np.savetxt(f"./{args.results_path}/Test_nll.txt", nll_test)
 
 
 def plot_std(samples, epoch):
     plt.imshow(samples, cmap='jet', origin='lower', interpolation='bilinear')
     plt.colorbar()
     plt.tight_layout(pad=0.05, w_pad=0.05, h_pad=0.05)
-    plt.savefig('std_%d.pdf' % epoch, dpi=300, bbox_inches='tight')
+    plt.savefig(f'{args.results_path}/std_%d.pdf' % epoch, dpi=300, bbox_inches='tight')
     plt.close()

@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from args import args
+
 plt.switch_backend('agg')
 
 
@@ -23,19 +25,19 @@ def error_bar(actual, pred, epoch):
     pred = pred
 
     pred_mean = np.mean(pred, axis=0)
-    print('pred_mean', pred_mean.shape,flush=True)
-    print(actual.shape,flush=True)
-    print(pred.shape,flush=True)
+    print('pred_mean', pred_mean.shape, flush=True)
+    print(actual.shape, flush=True)
+    print(pred.shape, flush=True)
 
     pred_mean = pred_mean.reshape(64, 64)
     pred_diag = np.diag(pred_mean)
 
     actdiag = np.diag(actual)
-    print(actdiag.shape,flush=True)
+    print(actdiag.shape, flush=True)
 
     pred_std = np.std(pred, axis=0)
     pred_std = pred_std.reshape(64, 64)
-    print('std', pred_std.shape,flush=True)
+    print('std', pred_std.shape, flush=True)
     std_diag = np.diag(pred_std)
 
     std_val = np.std(actdiag)
@@ -44,7 +46,7 @@ def error_bar(actual, pred, epoch):
     y_cos = np.cos(x)
     errorfill(x, pred_diag, 2 * std_diag, 'b')
     plt.plot(x, actdiag, 'g')
-    plt.savefig('./results/diag_error_%d.pdf' % epoch, bbox_inches='tight')
+    plt.savefig(f'{args.results_path}/diag_error_{epoch}.pdf', bbox_inches='tight')
     plt.close()
 
 
@@ -54,14 +56,14 @@ def train_test_error(nll_train, nll_test, epoch):
     plt.xlabel('Epoch')
     plt.ylabel(r'NLL')
     plt.legend(loc='lower right')
-    plt.savefig("Test_NLL.pdf", dpi=600)
+    plt.savefig(f"{args.results_path}/Test_NLL.pdf", dpi=600)
     plt.close()
-    np.savetxt("Test_NLL_test.txt", nll_test)
+    np.savetxt(f"{args.results_path}/Test_NLL_test.txt", nll_test)
 
 
 def plot_std(samples, epoch):
     plt.imshow(samples, cmap='jet', origin='lower', interpolation='bilinear')
     plt.colorbar()
     plt.tight_layout(pad=0.05, w_pad=0.05, h_pad=0.05)
-    plt.savefig('./results/std_%d.pdf' % epoch, dpi=300, bbox_inches='tight')
+    plt.savefig(f'{args.results_path}/std_{epoch}.pdf', dpi=300, bbox_inches='tight')
     plt.close()

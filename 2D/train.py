@@ -47,16 +47,6 @@ INN_network = main_file(args.cond_size, network_s_t,
                         args.permute_a3)
 cond_network = conditioning_network()
 
-# for debug
-# combine_parameters_c = [parameters_net for parameters_net in cond_network.parameters() if parameters_net.trainable]
-# for parameters_net in combine_parameters_c:
-#     parameters_net.set_value(0.002*paddle.ones(parameters_net.shape))
-#
-# combine_parameters = [parameters_net for parameters_net in INN_network.parameters() if parameters_net.trainable]
-# for parameters_net in combine_parameters:
-#     parameters_net.set_value(0.002*paddle.ones(parameters_net.shape))
-# combine_parameters += combine_parameters_c
-
 # for run
 combine_parameters = [parameters_net for parameters_net in INN_network.parameters() if parameters_net.trainable]
 for parameters_net in combine_parameters:
@@ -66,7 +56,7 @@ combine_parameters += list(cond_network.parameters())
 optimizer = optim.Adam(learning_rate=args.lr, parameters=combine_parameters, weight_decay=args.weight_decay)
 
 
-def train(N_epochs):
+def train():
     INN_network.train()
     cond_network.train()
     loss_mean = []
@@ -89,12 +79,11 @@ def train(N_epochs):
     return loss_mean1
 
 
-def test(epoch):
+def test():
     INN_network.eval()
     cond_network.eval()
     loss_mean = []
     for batch_idx, (input, target) in enumerate(test_loader):
-        # input, target = input.to(device), target.to(device)
         input, target = input.reshape([16, 1, 64, 64]), target.reshape([16, 4, 64])
         # for config_1  change this to target = target.reshape([16,2,64])
         x = input.reshape([16, 1, 64, 64])
@@ -156,8 +145,8 @@ def sample2(epoch):
             actual = input1
             pred = rev_x
             error_bar(actual, pred, epoch)
-            io.savemat('./results/samples_%d.mat' % epoch, dict([('rev_x_%d' % epoch, np.array(rev_x))]))
-            io.savemat('./results/input_%d.mat' % epoch, dict([('pos_test_%d' % epoch, np.array(input_test))]))
+            io.savemat(f'./{args.results_path}/samples_{epoch}.mat', dict([('rev_x_%d' % epoch, np.array(rev_x))]))
+            io.savemat(f'./{args.results_path}/input_{epoch}.mat', dict([('pos_test_%d' % epoch, np.array(input_test))]))
         if epoch == (args.epochs - 1):
             std_sample = np.std(rev_x, axis=0)
             std_sample = std_sample.reshape([64, 64])
@@ -167,7 +156,7 @@ def sample2(epoch):
 domain = 4096
 
 
-def test_NLL(epoch):
+def test_NLL():
     INN_network.eval()
     cond_network.eval()
     final_concat = []
@@ -207,45 +196,33 @@ def test_NLL(epoch):
     return final_concat
 
 
-# ==========================================================
-def mkdir(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-
-# ==========================================================
-
-
 print('training start .............', flush=True)
-mkdir('results')
-N_epochs = 102
 loss_train_all = []
 loss_test_all = []
 tic = time()
 for epoch in range(args.epochs):
     print('epoch number .......', epoch, flush=True)
-    loss_train = train(epoch)
+    loss_train = train()
     loss_train2 = np.mean(loss_train)
     loss_train_all.append(loss_train2)
     with paddle.no_grad():
         sample2(epoch)
-        loss_test = test(epoch)
+        loss_test = test()
         loss_test = np.mean(loss_test)
         print(('mean NLL :', loss_test), flush=True)
         loss_test_all.append(loss_test)
-    if epoch == (N_epochs - 1):
-        final_error = test_NLL(epoch)
+    if epoch == (args.epochs - 1):
+        final_error = test_NLL()
         old_val = np.mean(final_error)
         print('print error mean NLL:', np.mean(final_error), flush=True)
 
-epoch1 = 200
-paddle.save(INN_network.state_dict(), f'INN_network_epoch{epoch1}.pt')
-paddle.save(cond_network.state_dict(), f'cond_network_epoch{epoch1}.pt')
+paddle.save(INN_network.state_dict(), f'{args.results_path}/INN_network_epoch{args.epochs}.pt')
+paddle.save(cond_network.state_dict(), f'{args.results_path}/cond_network_epoch{args.epochs}.pt')
 loss_train_all = np.array(loss_train_all)
 loss_test_all = np.array(loss_test_all)
 print('saving the training error and testing error', flush=True)
-io.savemat('test_loss.mat', dict([('testing_loss', np.array(loss_test_all))]))
+io.savemat(f'{args.results_path}/test_loss.mat', dict([('testing_loss', np.array(loss_test_all))]))
 print('plotting the training error and testing error', flush=True)
-train_test_error(loss_train_all, loss_test_all, epoch1)
+train_test_error(loss_train_all, loss_test_all, args.epochs)
 toc = time()
 print('total traning taken:', toc - tic, flush=True)

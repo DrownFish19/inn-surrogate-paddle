@@ -1,4 +1,3 @@
-import os
 from time import time
 
 import numpy as np
@@ -153,10 +152,8 @@ def sample2(epoch):
             plot_std(std_sample, epoch)
 
 
-domain = 4096
-
-
 def test_NLL():
+    domain = 4096
     INN_network.eval()
     cond_network.eval()
     final_concat = []
